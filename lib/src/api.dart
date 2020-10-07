@@ -34,6 +34,12 @@ class FlutterCallkeep extends EventManager {
     return _setupIOS(options['ios'] as Map<String, dynamic>);
   }
 
+  Function(Map<dynamic, dynamic> payload) onCallReceive;
+
+  void setOnCallReceive(Function(Map<dynamic, dynamic> payload) onCallReceive) {
+    this.onCallReceive = onCallReceive;
+  }
+
   Future<void> registerPhoneAccount() async {
     if (isIOS) {
       return;
@@ -356,6 +362,7 @@ class FlutterCallkeep extends EventManager {
         emit(CallKeepDidActivateAudioSession());
         break;
       case 'CallKeepDidDisplayIncomingCall':
+        onCallReceive(call.arguments as Map<dynamic, dynamic>);
         emit(CallKeepDidDisplayIncomingCall.fromMap(
             call.arguments as Map<dynamic, dynamic>));
         break;
